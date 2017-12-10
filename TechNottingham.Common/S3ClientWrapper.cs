@@ -1,6 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
+using System.IO;
 using System.Threading.Tasks;
 using Amazon.S3;
 using Amazon.S3.Model;
@@ -29,6 +28,18 @@ namespace TechNottingham.Common
             {
                 return null;
             }
+        }
+
+        public async Task<Stream> GetData(string key)
+        {
+            var request = new GetObjectRequest
+            {
+                BucketName = BucketId,
+                Key = key
+            };
+
+            var response = await Inner.GetObjectAsync(request);
+            return response.ResponseStream;
         }
 
         public Task SaveData(string key, string content)

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -9,5 +10,6 @@ namespace TechNottingham.Common
     {
         Task<DateTime?> EventDataModifiedOn(string filename);
         Task SaveData(string filename, string content);
+        Task<Stream> GetData(string key);
     }
 }
