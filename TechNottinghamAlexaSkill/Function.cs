@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using Alexa.NET;
 using Alexa.NET.Request;
@@ -14,6 +15,19 @@ namespace TechNottinghamAlexaSkill
     {
         
         public Task<SkillResponse> FunctionHandler(SkillRequest input)
+        {
+            try
+            {
+                return InnerHandler(input);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return Task.FromResult(ResponseBuilder.Tell(PhraseList.ErrorText));
+            }
+        }
+
+        private Task<SkillResponse> InnerHandler(SkillRequest input)
         {
             switch (input.Request)
             {
