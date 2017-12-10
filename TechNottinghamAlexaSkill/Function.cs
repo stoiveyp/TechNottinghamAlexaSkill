@@ -35,10 +35,16 @@ namespace TechNottinghamAlexaSkill
         {
             switch (intent.Intent.Name)
             {
-
+                case "MissionStatement":
+                    return MissionStatement();
             }
 
             return Task.FromResult(ResponseBuilder.Empty());
+        }
+
+        private Task<SkillResponse> MissionStatement()
+        {
+            return Task.FromResult(ResponseBuilder.Tell(PhraseList.MissionStatement));
         }
     }
 }
