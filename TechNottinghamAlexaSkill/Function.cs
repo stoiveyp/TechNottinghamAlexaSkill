@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Alexa.NET;
 using Alexa.NET.Request;
@@ -16,18 +13,12 @@ namespace TechNottinghamAlexaSkill
     public class Function
     {
         
-        /// <summary>
-        /// A simple function that takes a string and does a ToUpper
-        /// </summary>
-        /// <param name="input"></param>
-        /// <param name="context"></param>
-        /// <returns></returns>
         public Task<SkillResponse> FunctionHandler(SkillRequest input)
         {
             switch (input.Request)
             {
-                case LaunchRequest launch:
-                    return Handle(launch);
+                case LaunchRequest _:
+                    return Launch();
                 case IntentRequest intent:
                     return Handle(intent);
             }
@@ -35,7 +26,7 @@ namespace TechNottinghamAlexaSkill
             return Task.FromResult(ResponseBuilder.Empty());
         }
 
-        private Task<SkillResponse> Handle(LaunchRequest _)
+        private static Task<SkillResponse> Launch()
         {
             return Task.FromResult(ResponseBuilder.Ask(PhraseList.WelcomeText, null));
         }
