@@ -71,12 +71,14 @@ namespace TechNottinghamAlexaSkill
                     return MissionStatement();
                 case IntentNames.NextEvent:
                     return NextEvent(intent.Intent);
+                case BuiltInIntent.Help:
+                    return HelpText();
             }
 
             return Task.FromResult(ResponseBuilder.Empty());
         }
 
-        private async Task<SkillResponse> NextEvent(Intent intent)
+        private async Task<SkillResponse> NextEvent(Intent _)
         {
             var meetups = await GetNextEventData();
 
@@ -92,6 +94,11 @@ namespace TechNottinghamAlexaSkill
         private Task<MeetupEvent[]> GetNextEventData()
         {
             return S3Client.GetEventData(S3Keys.EventData);
+        }
+
+        private Task<SkillResponse> HelpText()
+        {
+            return Task.FromResult(ResponseBuilder.Tell(PhraseList.HelpText));
         }
 
         private Task<SkillResponse> MissionStatement()

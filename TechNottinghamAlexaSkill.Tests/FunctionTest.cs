@@ -17,7 +17,7 @@ namespace TechNottinghamAlexaSkill.Tests
         public async Task StopReturnsEmptyResponse()
         {
             var function = DefaultFunction();
-            var intent = GetIntent("AMAZON.StopIntent");
+            var intent = GetIntent(BuiltInIntent.Stop);
 
             var expected = ResponseBuilder.Empty();
             var actual = await function.FunctionHandler(intent);
@@ -29,7 +29,7 @@ namespace TechNottinghamAlexaSkill.Tests
         public async Task CancelReturnsEmptyResponse()
         {
             var function = DefaultFunction();
-            var intent = GetIntent("AMAZON.CancelIntent");
+            var intent = GetIntent(BuiltInIntent.Cancel);
 
             var expected = ResponseBuilder.Empty();
             var actual = await function.FunctionHandler(intent);
@@ -114,6 +114,18 @@ namespace TechNottinghamAlexaSkill.Tests
             var actual = await function.FunctionHandler(intent);
 
             Assert.True(CompareJson(expected,actual));
+        }
+
+        [Fact]
+        public async Task EnsureHelpReturnsText()
+        {
+            var function = DefaultFunction();
+            var intent = GetIntent(BuiltInIntent.Help);
+
+            var expected = ResponseBuilder.Tell(PhraseList.HelpText);
+            var actual = await function.FunctionHandler(intent);
+
+            Assert.True(CompareJson(expected, actual));
         }
 
         public static bool CompareJson(object expected, object actual)

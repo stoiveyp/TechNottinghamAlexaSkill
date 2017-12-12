@@ -12,7 +12,7 @@ namespace TechNottinghamAlexaSkill
     {
         public const string WelcomeText = "Hello from Tech Nottingham. How can we help?";
         public const string ErrorText = "Sorry. I can't get hold of Tech Nottingham right now. Please try again later.";
-        public const string HelpText = "";
+        public const string HelpText = "You can find out about Tech Nottingham's work by asking about the mission statement, or find out about our next event by saying. ask technottingham about the next event";
 
         public const string MissionStatement = "Tech Nottingham is an organisation with the mission to Make Nottingham a better place to live and work in technology. All our events are free to attend, and we welcome everyone regardless of background or technical experience.";
 
