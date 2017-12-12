@@ -10,5 +10,7 @@ namespace TechNottingham.Common
         {
             return System.Environment.GetEnvironmentVariable(key);
         }
+
+        public DateTime CurrentTime => DateTime.Now;
     }
 }
