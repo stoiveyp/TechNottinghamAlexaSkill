@@ -15,6 +15,7 @@ namespace TechNottinghamAlexaSkill
         public const string HelpText = "You can find out about Tech Nottingham's work by asking about the mission statement, or find out about our next event by saying. ask technottingham about the next event";
 
         public const string MissionStatement = "Tech Nottingham is an organisation with the mission to Make Nottingham a better place to live and work in technology. All our events are free to attend, and we welcome everyone regardless of background or technical experience.";
+        public const string ImageUrl = "https://s3-eu-west-1.amazonaws.com/technottinghamalexaimages/";
 
         public static readonly StandardCard MissionStatementCard = new StandardCard
         {
@@ -22,8 +23,8 @@ namespace TechNottinghamAlexaSkill
             Content = MissionStatement,
             Image = new CardImage
             {
-                SmallImageUrl = TechNottsEvent.TechNottingham.LargeImage,
-                LargeImageUrl = TechNottsEvent.TechNottingham.SmallImage
+                SmallImageUrl = ImageUrl + TechNottsEvent.TechNottingham.LargeImage,
+                LargeImageUrl = ImageUrl + TechNottsEvent.TechNottingham.SmallImage
             }
         };
 
