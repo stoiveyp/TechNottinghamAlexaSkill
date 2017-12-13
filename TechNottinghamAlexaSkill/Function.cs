@@ -82,6 +82,12 @@ namespace TechNottinghamAlexaSkill
         private async Task<SkillResponse> NextEvent(Intent intent)
         {
             var technotts = TechNottsEvent.Parse(intent);
+
+            if (string.IsNullOrWhiteSpace(technotts.Name) && intent.Slots.Count > 0)
+            {
+                return ResponseBuilder.Tell($"I'm sorry, I couldn't find information for {intent.Slots["event"].Value}. Please try again");
+            }
+
             var meetups = await GetNextEventData(technotts.EventType);
 
             meetups = meetups.Where(m =>
@@ -90,7 +96,7 @@ namespace TechNottinghamAlexaSkill
             {
                 var meetup = meetups.First();
                 var response = ResponseBuilder.Tell(ContentCreation.NextEvent(technotts,meetup,Environment.CurrentTime));
-                response.Response.Card = ContentCreation.EventCard(technotts, meetup.name, meetup.description);
+                response.Response.Card = ContentCreation.EventCard(technotts, meetup.name, $"{DateTime.Parse(meetup.local_date).ToString("D")} at {meetup.venue.name}");
                 return response;
             }
             

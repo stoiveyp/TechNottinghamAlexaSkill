@@ -29,7 +29,11 @@ namespace TechNottinghamAlexaSkill
             {"tech nottingham", TechNottingham},
             {"tech notts", TechNottingham},
             {"women in tech", WomenInTech},
+            {"women", WomenInTech},
+            {"women in", WomenInTech},
             {"women in technology", WomenInTech},
+            {"knot tuesday",NottTuesday},
+            {"knots tuesday",NottTuesday},
             {"nott tuesday",NottTuesday},
             {"notts tuesday",NottTuesday},
             {"tech on toast",TechOnToast }
