@@ -6,6 +6,7 @@ using Alexa.NET.Request;
 using Alexa.NET.Request.Type;
 using Xunit;
 using Newtonsoft.Json.Linq;
+using NodaTime.Text;
 using NSubstitute;
 using TechNottingham.Common;
 
@@ -78,13 +79,14 @@ namespace TechNottinghamAlexaSkill.Tests
         {
             var environment = GetEnvironment();
             var s3 = Substitute.For<IS3Client>();
+            var technott = TechNottsEvent.Empty;
             s3.GetEventData(S3Keys.EventData).Returns(new MeetupEvent[] { });
 
             var function = new Function(environment, s3);
 
             var intent = GetIntent(IntentNames.NextEvent);
 
-            var expected = ResponseBuilder.Tell(PhraseList.NoNextEvent);
+            var expected = ResponseBuilder.Tell(PhraseList.NoNextEvent(technott));
             var actual = await function.FunctionHandler(intent);
 
             Assert.True(CompareJson(expected, actual));
@@ -110,7 +112,7 @@ namespace TechNottinghamAlexaSkill.Tests
             var function = new Function(environment,s3);
             var intent = GetIntent(IntentNames.NextEvent);
 
-            var expected = ResponseBuilder.Tell(PhraseList.NextEvent(events.First(),environment.CurrentTime));
+            var expected = ResponseBuilder.Tell(PhraseList.NextEvent(TechNottsEvent.Empty, events.First(),environment.CurrentTime));
             var actual = await function.FunctionHandler(intent);
 
             Assert.True(CompareJson(expected,actual));
@@ -126,6 +128,13 @@ namespace TechNottinghamAlexaSkill.Tests
             var actual = await function.FunctionHandler(intent);
 
             Assert.True(CompareJson(expected, actual));
+        }
+
+        [Fact]
+        public async Task GetSpecificEvent()
+        {
+            var weekResult = LocalDatePattern.Iso.Parse("2015-W49");
+            Console.WriteLine(weekResult);
         }
 
         public static bool CompareJson(object expected, object actual)

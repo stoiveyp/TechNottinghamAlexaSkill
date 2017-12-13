@@ -7,6 +7,7 @@ using Alexa.NET.Request.Type;
 using Alexa.NET.Response;
 using Amazon.Lambda.Core;
 using Amazon.S3;
+using Newtonsoft.Json.Linq;
 using TechNottingham.Common;
 
 // Assembly attribute to enable the Lambda function's JSON input to be converted into a .NET class.
@@ -78,22 +79,28 @@ namespace TechNottinghamAlexaSkill
             return Task.FromResult(ResponseBuilder.Empty());
         }
 
-        private async Task<SkillResponse> NextEvent(Intent _)
+        private async Task<SkillResponse> NextEvent(Intent intent)
         {
-            var meetups = await GetNextEventData();
-
+            var technotts = TechNottsEvent.Parse(intent);
+            var meetups = await GetNextEventData(technotts.EventType);
+            meetups = meetups.Where(m =>
+                technotts.TitleFilter == null || m.name.IndexOf(technotts.TitleFilter, StringComparison.OrdinalIgnoreCase) > -1).ToArray();
             if (meetups.Length > 0)
             {
-                return ResponseBuilder.Tell(PhraseList.NextEvent(meetups.First(),Environment.CurrentTime));
+                return ResponseBuilder.Tell(PhraseList.NextEvent(technotts,meetups.First(),Environment.CurrentTime));
                 //NodaTime.Calendars.WeekYearRules.FromCalendarWeekRule(CalendarWeekRule.FirstFourDayWeek,DayOfWeek.Monday).GetLocalDate()
             }
             
-            return ResponseBuilder.Tell(PhraseList.NoNextEvent);
+            return ResponseBuilder.Tell(PhraseList.NoNextEvent(technotts));
         }
 
-        private Task<MeetupEvent[]> GetNextEventData()
+        private Task<MeetupEvent[]> GetNextEventData(string type)
         {
-            return S3Client.GetEventData(S3Keys.EventData);
+            if (string.IsNullOrWhiteSpace(type))
+            {
+                return S3Client.GetEventData(S3Keys.EventData);
+            }
+            return S3Client.GetEventData(S3Keys.EventData + "-" + type);
         }
 
         private Task<SkillResponse> HelpText()

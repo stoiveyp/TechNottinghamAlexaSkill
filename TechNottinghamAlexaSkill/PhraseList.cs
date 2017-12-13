@@ -16,8 +16,14 @@ namespace TechNottinghamAlexaSkill
 
         public const string MissionStatement = "Tech Nottingham is an organisation with the mission to Make Nottingham a better place to live and work in technology. All our events are free to attend, and we welcome everyone regardless of background or technical experience.";
 
-        public const string NoNextEvent = "There's no confirmed events at the moment, but please check back soon as Tech Nottingham put on several events every month";
-        public static Speech NextEvent(MeetupEvent meetup, DateTime currentDateTime)
+
+        public static string NoNextEvent(TechNottsEvent technotts)
+        {
+            return $"There's no confirmed{technotts.InSentence} events at the moment, but please check back soon as Tech Nottingham put on several events every month";
+        }
+
+
+        public static Speech NextEvent(TechNottsEvent technotts, MeetupEvent meetup, DateTime currentDateTime)
         {
             var speech = new Speech();
 
@@ -27,7 +33,7 @@ namespace TechNottinghamAlexaSkill
             var timeUntilEvent = currentDateTime.Subtract(eventDate);
             var preposition = char.IsNumber(timeUntilEvent.Humanize(1)[0]) ? " in" : string.Empty;
 
-            dateSummary.Elements.Add(new Sentence($"The next Tech Nottingham event is{preposition} {timeUntilEvent.Humanize(1)}"));
+            dateSummary.Elements.Add(new Sentence($"The next{technotts.InSentence} event is{preposition} {timeUntilEvent.Humanize(1)}"));
             dateSummary.Elements.Add(new Sentence($"on {eventDate.ToOrdinalWords()}"));
             speech.Elements.Add(dateSummary);
 
