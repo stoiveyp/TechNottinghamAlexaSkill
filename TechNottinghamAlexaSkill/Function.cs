@@ -53,7 +53,7 @@ namespace TechNottinghamAlexaSkill
                 case LaunchRequest _:
                     return Launch();
                 case IntentRequest intent:
-                    return Handle(intent);
+                    return Intent(input,intent);
             }
 
             return Task.FromResult(ResponseBuilder.Empty());
@@ -64,7 +64,7 @@ namespace TechNottinghamAlexaSkill
             return Task.FromResult(ResponseBuilder.Ask(ContentCreation.WelcomeText, null));
         }
 
-        private Task<SkillResponse> Handle(IntentRequest intent)
+        private Task<SkillResponse> Intent(SkillRequest request, IntentRequest intent)
         {
             switch (intent.Intent.Name)
             {
@@ -83,12 +83,15 @@ namespace TechNottinghamAlexaSkill
         {
             var technotts = TechNottsEvent.Parse(intent);
             var meetups = await GetNextEventData(technotts.EventType);
+
             meetups = meetups.Where(m =>
                 technotts.TitleFilter == null || m.name.IndexOf(technotts.TitleFilter, StringComparison.OrdinalIgnoreCase) > -1).ToArray();
             if (meetups.Length > 0)
             {
-                return ResponseBuilder.Tell(ContentCreation.NextEvent(technotts,meetups.First(),Environment.CurrentTime));
-                //NodaTime.Calendars.WeekYearRules.FromCalendarWeekRule(CalendarWeekRule.FirstFourDayWeek,DayOfWeek.Monday).GetLocalDate()
+                var meetup = meetups.First();
+                var response = ResponseBuilder.Tell(ContentCreation.NextEvent(technotts,meetup,Environment.CurrentTime));
+                response.Response.Card = ContentCreation.EventCard(technotts, meetup.name, meetup.description);
+                return response;
             }
             
             return ResponseBuilder.Tell(ContentCreation.NoNextEvent(technotts));

@@ -19,9 +19,9 @@ namespace TechNottinghamAlexaSkill
         public string LargeImage { get; set; }
 
         public static TechNottsEvent TechNottingham { get; } = new TechNottsEvent("Tech Nottingham", "tech-nottingham") { LargeImage = "techNottinghamLarge.png", SmallImage = "techNottingham.png" };
-        public static TechNottsEvent WomenInTech { get; } = new TechNottsEvent("Women in Technology", "women-in-tech-nottingham");
-        public static TechNottsEvent TechOnToast { get; } = new TechNottsEvent("Tech on Toast", "tech-nottingham", "Toast");
-        public static TechNottsEvent NottTuesday { get; } = new TechNottsEvent("Nott Tuesday", "nott-tuesday");
+        public static TechNottsEvent WomenInTech { get; } = new TechNottsEvent("Women in Technology", "women-in-tech-nottingham"){LargeImage="womenintechlarge.png",SmallImage="womenintech.png"};
+        public static TechNottsEvent TechOnToast { get; } = new TechNottsEvent("Tech on Toast", "tech-nottingham", "Toast"){LargeImage="techontoast.png", SmallImage="techontoast.png" };
+        public static TechNottsEvent NottTuesday { get; } = new TechNottsEvent("Nott Tuesday", "nott-tuesday"){LargeImage = "nottTuesday.png",SmallImage = "nottTuesday.png"};
         public static TechNottsEvent Empty { get; } = new TechNottsEvent(string.Empty, string.Empty);
 
         public static Dictionary<string, TechNottsEvent> EventList = new Dictionary<string, TechNottsEvent>

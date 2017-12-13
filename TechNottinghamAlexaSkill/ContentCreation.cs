@@ -16,17 +16,21 @@ namespace TechNottinghamAlexaSkill
 
         public const string MissionStatement = "Tech Nottingham is an organisation with the mission to Make Nottingham a better place to live and work in technology. All our events are free to attend, and we welcome everyone regardless of background or technical experience.";
         public const string ImageUrl = "https://s3-eu-west-1.amazonaws.com/technottinghamalexaimages/";
+        public static ICard MissionStatementCard => EventCard(TechNottsEvent.TechNottingham, "Tech Nottingham", MissionStatement);
 
-        public static readonly StandardCard MissionStatementCard = new StandardCard
+        public static ICard EventCard(TechNottsEvent meetup, string title, string content)
         {
-            Title = "Tech Nottingham",
-            Content = MissionStatement,
-            Image = new CardImage
+            return new StandardCard
             {
-                SmallImageUrl = ImageUrl + TechNottsEvent.TechNottingham.LargeImage,
-                LargeImageUrl = ImageUrl + TechNottsEvent.TechNottingham.SmallImage
-            }
-        };
+                Title = title,
+                Content = content,
+                Image = new CardImage
+                {
+                    SmallImageUrl = ImageUrl + meetup.LargeImage,
+                    LargeImageUrl = ImageUrl + meetup.SmallImage
+                }
+            };
+        }
 
         public static string NoNextEvent(TechNottsEvent technotts)
         {
