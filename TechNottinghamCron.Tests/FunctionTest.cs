@@ -18,13 +18,13 @@ namespace TechNottinghamCron.Tests
             var context = new TestLambdaContext();
 
             var s3 = Substitute.For<IS3Client>();
-            s3.EventDataModifiedOn(Function.EventDataKey).Returns(DateTime.UtcNow);
+            s3.EventDataModifiedOn(S3Keys.EventData).Returns(DateTime.UtcNow);
             function.S3Client = s3;
             function.Environment = GetEnvironment();
             function.Handler = new ActionMessageHandler(req => new HttpResponseMessage(HttpStatusCode.OK));
             await function.FunctionHandler(context);
 
-            await s3.Received(1).EventDataModifiedOn(Function.EventDataKey);
+            await s3.Received(1).EventDataModifiedOn(S3Keys.EventData);
         }
 
         [Fact]
@@ -37,14 +37,14 @@ namespace TechNottinghamCron.Tests
             function.Environment = env;
 
             var s3 = Substitute.For<IS3Client>();
-            s3.EventDataModifiedOn(Function.EventDataKey).Returns(new DateTime?());
+            s3.EventDataModifiedOn(S3Keys.EventData).Returns(new DateTime?());
             s3.SaveData(Arg.Any<string>(), Arg.Any<string>()).Returns(Task.FromResult((object) null));
             function.S3Client = s3;
 
             var correctRequest = false;
             var handler = new ActionMessageHandler(req =>
             {
-                if (req.RequestUri.AbsolutePath == "/randompath")
+                if (req.RequestUri.AbsolutePath == "/tech-nottingham/events")
                 {
                     correctRequest = true;
                 }
@@ -66,7 +66,7 @@ namespace TechNottinghamCron.Tests
             function.Environment = env;
 
             var s3 = Substitute.For<IS3Client>();
-            s3.EventDataModifiedOn(Function.EventDataKey).Returns(DateTime.UtcNow.AddMinutes(-11));
+            s3.EventDataModifiedOn(S3Keys.EventData).Returns(DateTime.UtcNow.AddMinutes(-11));
             s3.SaveData(Arg.Any<string>(), Arg.Any<string>()).Returns(Task.FromResult((object)null));
             function.S3Client = s3;
 
@@ -92,7 +92,7 @@ namespace TechNottinghamCron.Tests
             function.Environment = env;
 
             var s3 = Substitute.For<IS3Client>();
-            s3.EventDataModifiedOn(Function.EventDataKey).Returns(DateTime.UtcNow.AddMinutes(-3));
+            s3.EventDataModifiedOn(S3Keys.EventData).Returns(DateTime.UtcNow.AddMinutes(-3));
             s3.SaveData(Arg.Any<string>(), Arg.Any<string>()).Returns(Task.FromResult((object)null));
             function.S3Client = s3;
 
@@ -112,7 +112,8 @@ namespace TechNottinghamCron.Tests
         {
             var env = Substitute.For<IEnvironment>();
             env.Get(Function.BucketVariableName).Returns("test");
-            env.Get(Function.DataVariableName).Returns("https://www.meetup.com/randompath");
+            env.Get(Function.MeetupUrlVariableName).Returns("https://www.meetup.com/{0}/events");
+            env.Get(Function.MeetupsVariableName).Returns("tech-nottingham");
             return env;
         }
     }

@@ -4,9 +4,8 @@ using System.Text;
 
 namespace TechNottingham.Common
 {
-    public interface IEnvironment
+    public static class S3Keys
     {
-        string Get(string key);
-        DateTime CurrentTime { get; }
+        public const string EventData = "eventdata";
     }
 }

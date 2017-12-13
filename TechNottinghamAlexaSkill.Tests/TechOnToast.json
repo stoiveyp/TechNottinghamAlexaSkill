@@ -1,0 +1,47 @@
+﻿{
+  "session": {
+    "new": true,
+    "sessionId": "SessionId.73762f3c-d999-4510-8680-c4e0099c531e",
+    "application": {
+      "applicationId": "amzn1.ask.skill.7fe00ccf-eafe-488f-8d13-3b99ada523f5"
+    },
+    "attributes": {},
+    "user": {
+      "userId": "amzn1.ask.account.AEPZWZAXOV6HQV4XZCSXPATVMU7MXL7MZKE3MRCF76EOOQIMFCBGN4CZ7EL4JQTS3DL5TJX64WGYJWWVYWPSYJHL74IY75UBHZPCEYJGE6TYRSWVGYXTRDQTZOEIV2L2IUFEJMIPDJMFG2WNZQQMTUN5XOIKGDBWUGFAH5U2EUTSN2T67FTYAPLSMWOBUMKCQU64EWXX3CNT3FY",
+      "accessToken": "3b89ee1b8c57898590ae163f077da648"
+    }
+  },
+  "request": {
+    "type": "IntentRequest",
+    "requestId": "EdwRequestId.7b44c2a6-3675-4e32-9c56-1f2a95774820",
+    "intent": {
+      "name": "NextEvent",
+      "slots": {
+        "event": {
+          "name": "event",
+          "value": "tech on toast"
+        }
+      }
+    },
+    "locale": "en-GB",
+    "timestamp": "2017-12-13T08:17:20Z"
+  },
+  "context": {
+    "AudioPlayer": {
+      "playerActivity": "IDLE"
+    },
+    "System": {
+      "application": {
+        "applicationId": "amzn1.ask.skill.7fe00ccf-eafe-488f-8d13-3b99ada523f5"
+      },
+      "user": {
+        "userId": "amzn1.ask.account.AEPZWZAXOV6HQV4XZCSXPATVMU7MXL7MZKE3MRCF76EOOQIMFCBGN4CZ7EL4JQTS3DL5TJX64WGYJWWVYWPSYJHL74IY75UBHZPCEYJGE6TYRSWVGYXTRDQTZOEIV2L2IUFEJMIPDJMFG2WNZQQMTUN5XOIKGDBWUGFAH5U2EUTSN2T67FTYAPLSMWOBUMKCQU64EWXX3CNT3FY",
+        "accessToken": "3b89ee1b8c57898590ae163f077da648"
+      },
+      "device": {
+        "supportedInterfaces": {}
+      }
+    }
+  },
+  "version": "1.0"
+}

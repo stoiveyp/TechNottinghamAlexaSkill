@@ -10,6 +10,6 @@ namespace TechNottingham.Common
     {
         Task<DateTime?> EventDataModifiedOn(string filename);
         Task SaveData(string filename, string content);
-        Task<Stream> GetData(string key);
+        Task<MeetupEvent[]> GetEventData(string key);
     }
 }

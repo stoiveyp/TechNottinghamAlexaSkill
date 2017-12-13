@@ -3,6 +3,8 @@ using System.IO;
 using System.Threading.Tasks;
 using Amazon.S3;
 using Amazon.S3.Model;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace TechNottingham.Common
 {
@@ -10,6 +12,8 @@ namespace TechNottingham.Common
     {
         private AmazonS3Client Inner { get; }
         private string BucketId { get; }
+
+        private static JsonSerializer Serializer = JsonSerializer.CreateDefault();
 
         public S3ClientWrapper(string bucket, AmazonS3Client amazonS3Client)
         {
@@ -30,17 +34,24 @@ namespace TechNottingham.Common
             }
         }
 
-        public async Task<Stream> GetData(string key)
+        public async Task<MeetupEvent[]> GetEventData(string key)
         {
-            var request = new GetObjectRequest
-            {
-                BucketName = BucketId,
-                Key = key
-            };
-
-            var response = await Inner.GetObjectAsync(request);
-            return response.ResponseStream;
+            var content = await ReadFileAsStringAsync(key);
+            return Serializer.Deserialize<MeetupEvent[]>(new JsonTextReader(new StringReader(content)));
         }
+
+        public async Task<string> ReadFileAsStringAsync(string fileKey)
+        {
+                var response = await Inner.GetObjectAsync(BucketId, fileKey);
+                using (response)
+                {
+                    using (var reader = new StreamReader(response.ResponseStream))
+                    {
+                        return reader.ReadToEnd();
+                    }
+                }
+        }
+
 
         public Task SaveData(string key, string content)
         {
