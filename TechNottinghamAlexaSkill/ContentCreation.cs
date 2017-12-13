@@ -8,7 +8,7 @@ using TechNottingham.Common;
 
 namespace TechNottinghamAlexaSkill
 {
-    public static class PhraseList
+    public static class ContentCreation
     {
         public const string WelcomeText = "Hello from Tech Nottingham. How can we help?";
         public const string ErrorText = "Sorry. I can't get hold of Tech Nottingham right now. Please try again later.";
@@ -16,6 +16,16 @@ namespace TechNottinghamAlexaSkill
 
         public const string MissionStatement = "Tech Nottingham is an organisation with the mission to Make Nottingham a better place to live and work in technology. All our events are free to attend, and we welcome everyone regardless of background or technical experience.";
 
+        public static readonly StandardCard MissionStatementCard = new StandardCard
+        {
+            Title = "Tech Nottingham",
+            Content = MissionStatement,
+            Image = new CardImage
+            {
+                SmallImageUrl = TechNottsEvent.TechNottingham.LargeImage,
+                LargeImageUrl = TechNottsEvent.TechNottingham.SmallImage
+            }
+        };
 
         public static string NoNextEvent(TechNottsEvent technotts)
         {

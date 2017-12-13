@@ -42,7 +42,7 @@ namespace TechNottinghamAlexaSkill
             catch (Exception ex)
             {
                 //Console.WriteLine(ex.Message);
-                return Task.FromResult(ResponseBuilder.Tell(PhraseList.ErrorText));
+                return Task.FromResult(ResponseBuilder.Tell(ContentCreation.ErrorText));
             }
         }
 
@@ -61,7 +61,7 @@ namespace TechNottinghamAlexaSkill
 
         private static Task<SkillResponse> Launch()
         {
-            return Task.FromResult(ResponseBuilder.Ask(PhraseList.WelcomeText, null));
+            return Task.FromResult(ResponseBuilder.Ask(ContentCreation.WelcomeText, null));
         }
 
         private Task<SkillResponse> Handle(IntentRequest intent)
@@ -87,11 +87,11 @@ namespace TechNottinghamAlexaSkill
                 technotts.TitleFilter == null || m.name.IndexOf(technotts.TitleFilter, StringComparison.OrdinalIgnoreCase) > -1).ToArray();
             if (meetups.Length > 0)
             {
-                return ResponseBuilder.Tell(PhraseList.NextEvent(technotts,meetups.First(),Environment.CurrentTime));
+                return ResponseBuilder.Tell(ContentCreation.NextEvent(technotts,meetups.First(),Environment.CurrentTime));
                 //NodaTime.Calendars.WeekYearRules.FromCalendarWeekRule(CalendarWeekRule.FirstFourDayWeek,DayOfWeek.Monday).GetLocalDate()
             }
             
-            return ResponseBuilder.Tell(PhraseList.NoNextEvent(technotts));
+            return ResponseBuilder.Tell(ContentCreation.NoNextEvent(technotts));
         }
 
         private Task<MeetupEvent[]> GetNextEventData(string type)
@@ -105,12 +105,14 @@ namespace TechNottinghamAlexaSkill
 
         private Task<SkillResponse> HelpText()
         {
-            return Task.FromResult(ResponseBuilder.Tell(PhraseList.HelpText));
+            return Task.FromResult(ResponseBuilder.Tell(ContentCreation.HelpText));
         }
 
         private Task<SkillResponse> MissionStatement()
         {
-            return Task.FromResult(ResponseBuilder.Tell(PhraseList.MissionStatement));
+            var response = ResponseBuilder.Tell(ContentCreation.MissionStatement);
+            response.Response.Card = ContentCreation.MissionStatementCard;
+            return Task.FromResult(response);
         }
     }
 }

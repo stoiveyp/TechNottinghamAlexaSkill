@@ -47,7 +47,7 @@ namespace TechNottinghamAlexaSkill.Tests
             var function = DefaultFunction();
             var intent = new SkillRequest {Request = new LaunchRequest()};
 
-            var expected = ResponseBuilder.Ask(PhraseList.WelcomeText, null);
+            var expected = ResponseBuilder.Ask(ContentCreation.WelcomeText, null);
             var actual = await function.FunctionHandler(intent);
 
             Assert.True(CompareJson(expected, actual));
@@ -59,7 +59,7 @@ namespace TechNottinghamAlexaSkill.Tests
             var function =DefaultFunction();
             var intent = GetIntent(IntentNames.MissionStatement);
 
-            var expected = ResponseBuilder.Tell(PhraseList.MissionStatement);
+            var expected = ResponseBuilder.Tell(ContentCreation.MissionStatement);
             var actual = await function.FunctionHandler(intent);
 
             Assert.True(CompareJson(expected, actual));
@@ -89,7 +89,7 @@ namespace TechNottinghamAlexaSkill.Tests
 
             var intent = GetIntent(IntentNames.NextEvent);
 
-            var expected = ResponseBuilder.Tell(PhraseList.NoNextEvent(technott));
+            var expected = ResponseBuilder.Tell(ContentCreation.NoNextEvent(technott));
             var actual = await function.FunctionHandler(intent);
 
             Assert.True(CompareJson(expected, actual));
@@ -115,7 +115,7 @@ namespace TechNottinghamAlexaSkill.Tests
             var function = new Function(environment,s3);
             var intent = GetIntent(IntentNames.NextEvent);
 
-            var expected = ResponseBuilder.Tell(PhraseList.NextEvent(TechNottsEvent.Empty, events.First(),environment.CurrentTime));
+            var expected = ResponseBuilder.Tell(ContentCreation.NextEvent(TechNottsEvent.Empty, events.First(),environment.CurrentTime));
             var actual = await function.FunctionHandler(intent);
 
             Assert.True(CompareJson(expected,actual));
@@ -127,7 +127,7 @@ namespace TechNottinghamAlexaSkill.Tests
             var function = DefaultFunction();
             var intent = GetIntent(BuiltInIntent.Help);
 
-            var expected = ResponseBuilder.Tell(PhraseList.HelpText);
+            var expected = ResponseBuilder.Tell(ContentCreation.HelpText);
             var actual = await function.FunctionHandler(intent);
 
             Assert.True(CompareJson(expected, actual));
@@ -144,7 +144,7 @@ namespace TechNottinghamAlexaSkill.Tests
             var function = new Function(environment,s3);
             var result = await function.FunctionHandler(request);
 
-            var expected = PhraseList.NextEvent(TechNottsEvent.EventList["tech on toast"],meetups.Skip(1).First(),environment.CurrentTime);
+            var expected = ContentCreation.NextEvent(TechNottsEvent.EventList["tech on toast"],meetups.Skip(1).First(),environment.CurrentTime);
             Assert.Equal(expected.ToXml(), ((SsmlOutputSpeech) result.Response.OutputSpeech).Ssml);
             //    ;            var weekResult = LocalDatePattern.Iso.Parse("2015-W49");
             //Console.WriteLine(weekResult);

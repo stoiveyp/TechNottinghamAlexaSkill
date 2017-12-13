@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics.Tracing;
 using System.Linq;
 using System.Text;
 using Alexa.NET.Request;
+using Amazon.S3.Model;
 
 namespace TechNottinghamAlexaSkill
 {
@@ -13,24 +15,25 @@ namespace TechNottinghamAlexaSkill
         public string EventType { get; }
         public string TitleFilter { get; }
         public string InSentence => " " + Name;
+        public string SmallImage { get; set; }
+        public string LargeImage { get; set; }
 
-        static TechNottsEvent()
+        public static TechNottsEvent TechNottingham { get; } = new TechNottsEvent("Tech Nottingham", "tech-nottingham") { LargeImage = "techNottinghamLarge.png", SmallImage = "techNottingham.png" };
+        public static TechNottsEvent WomenInTech { get; } = new TechNottsEvent("Women in Technology", "women-in-tech-nottingham");
+        public static TechNottsEvent TechOnToast { get; } = new TechNottsEvent("Tech on Toast", "tech-nottingham", "Toast");
+        public static TechNottsEvent NottTuesday { get; } = new TechNottsEvent("Nott Tuesday", "nott-tuesday");
+        public static TechNottsEvent Empty { get; } = new TechNottsEvent(string.Empty, string.Empty);
+
+        public static Dictionary<string, TechNottsEvent> EventList = new Dictionary<string, TechNottsEvent>
         {
-            var womenInTech = new TechNottsEvent("Women in Technology","women-in-tech-nottingham");
-            EventList.Add("women in tech",womenInTech);
-            EventList.Add("women in technology",womenInTech);
-
-            var techNottingham = new TechNottsEvent("Tech Nottingham","tech-nottingham");
-            EventList.Add("tech nottingham", techNottingham);
-            EventList.Add("tech notts",techNottingham);
-
-            var techOnToast = new TechNottsEvent("Tech on Toast","tech-nottingham","Toast");
-            EventList.Add("tech on toast",techOnToast);
-
-            var nottTuesday = new TechNottsEvent("Nott Tuesday","nott-tuesday");
-            EventList.Add("nott tuesday",nottTuesday);
-            EventList.Add("notts tuesday",nottTuesday);
-        }
+            {"tech nottingham", TechNottingham},
+            {"tech notts", TechNottingham},
+            {"women in tech", WomenInTech},
+            {"women in technology", WomenInTech},
+            {"nott tuesday",NottTuesday},
+            {"notts tuesday",NottTuesday},
+            {"tech on toast",TechOnToast }
+        };
 
         public TechNottsEvent(string name, string type, string titleFilter = null)
         {
@@ -38,9 +41,6 @@ namespace TechNottinghamAlexaSkill
             EventType = type;
             TitleFilter = titleFilter;
         }
-
-        public static readonly TechNottsEvent Empty = new TechNottsEvent(string.Empty,string.Empty);
-        public static readonly IDictionary<string,TechNottsEvent> EventList = new Dictionary<string, TechNottsEvent>();
 
         public static TechNottsEvent Parse(Intent intent)
         {
