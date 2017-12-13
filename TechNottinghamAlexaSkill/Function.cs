@@ -100,7 +100,7 @@ namespace TechNottinghamAlexaSkill
             {
                 return S3Client.GetEventData(S3Keys.EventData);
             }
-            return S3Client.GetEventData(S3Keys.EventData + "-" + type);
+            return S3Client.GetEventData(S3Keys.EventData + "_" + type);
         }
 
         private Task<SkillResponse> HelpText()

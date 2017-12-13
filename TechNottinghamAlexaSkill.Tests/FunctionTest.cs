@@ -1,9 +1,12 @@
 using System;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Alexa.NET;
 using Alexa.NET.Request;
 using Alexa.NET.Request.Type;
+using Alexa.NET.Response;
+using Newtonsoft.Json;
 using Xunit;
 using Newtonsoft.Json.Linq;
 using NodaTime.Text;
@@ -133,8 +136,18 @@ namespace TechNottinghamAlexaSkill.Tests
         [Fact]
         public async Task GetSpecificEvent()
         {
-            var weekResult = LocalDatePattern.Iso.Parse("2015-W49");
-            Console.WriteLine(weekResult);
+            var s3 = GetS3();
+            var environment = GetEnvironment();
+            var meetups = ExampleFileContent<MeetupEvent[]>("eventdata_tech-nottingham.json");
+            s3.GetEventData(S3Keys.EventData + "_" + "tech-nottingham").Returns(meetups);
+                var request = ExampleFileContent<SkillRequest>("TechOnToast.json");
+            var function = new Function(environment,s3);
+            var result = await function.FunctionHandler(request);
+
+            var expected = PhraseList.NextEvent(TechNottsEvent.EventList["tech on toast"],meetups.Skip(1).First(),environment.CurrentTime);
+            Assert.Equal(expected.ToXml(), ((SsmlOutputSpeech) result.Response.OutputSpeech).Ssml);
+            //    ;            var weekResult = LocalDatePattern.Iso.Parse("2015-W49");
+            //Console.WriteLine(weekResult);
         }
 
         public static bool CompareJson(object expected, object actual)
@@ -143,6 +156,20 @@ namespace TechNottinghamAlexaSkill.Tests
             var expectedJObject = JObject.FromObject(expected);
 
             return JToken.DeepEquals(expectedJObject, actualJObject);
+        }
+
+        public static T ExampleFileContent<T>(string expectedFile)
+        {
+            using (var reader = new JsonTextReader(new StringReader(ExampleFileContent(expectedFile))))
+            {
+                return new JsonSerializer().Deserialize<T>(reader);
+            }
+
+        }
+
+        public static string ExampleFileContent(string expectedFile)
+        {
+            return File.ReadAllText(Path.Combine(".", expectedFile));
         }
 
 
