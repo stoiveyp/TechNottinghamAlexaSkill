@@ -85,6 +85,7 @@ namespace TechNottinghamAlexaSkill
 
             if (string.IsNullOrWhiteSpace(technotts.Name) && intent.Slots.Count > 0)
             {
+                Console.WriteLine("event failed: "+ intent.Slots["event"].Value);
                 return ResponseBuilder.Tell($"I'm sorry, I couldn't find information for {intent.Slots["event"].Value}. Please try again");
             }
 
