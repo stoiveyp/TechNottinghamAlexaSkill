@@ -48,7 +48,7 @@ namespace TechNottinghamCron
                 await SaveEvents(s3, S3Keys.EventData + "_" + meetup, events);
             }
 
-            await SaveEvents(s3, S3Keys.EventData, list.ToArray());
+            await SaveEvents(s3, S3Keys.EventData, list.OrderBy(m => m.local_date).ToArray());
         }
 
         private async Task SaveEvents(IS3Client client, string key, MeetupEvent[] content)

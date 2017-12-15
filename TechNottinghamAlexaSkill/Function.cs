@@ -42,7 +42,7 @@ namespace TechNottinghamAlexaSkill
             catch (Exception ex)
             {
                 //Console.WriteLine(ex.Message);
-                return Task.FromResult(ResponseBuilder.Tell(PhraseList.ErrorText));
+                return Task.FromResult(ResponseBuilder.Tell(ContentCreation.ErrorText));
             }
         }
 
@@ -53,7 +53,7 @@ namespace TechNottinghamAlexaSkill
                 case LaunchRequest _:
                     return Launch();
                 case IntentRequest intent:
-                    return Handle(intent);
+                    return Intent(input,intent);
             }
 
             return Task.FromResult(ResponseBuilder.Empty());
@@ -61,10 +61,10 @@ namespace TechNottinghamAlexaSkill
 
         private static Task<SkillResponse> Launch()
         {
-            return Task.FromResult(ResponseBuilder.Ask(PhraseList.WelcomeText, null));
+            return Task.FromResult(ResponseBuilder.Ask(ContentCreation.WelcomeText, null));
         }
 
-        private Task<SkillResponse> Handle(IntentRequest intent)
+        private Task<SkillResponse> Intent(SkillRequest request, IntentRequest intent)
         {
             switch (intent.Intent.Name)
             {
@@ -82,16 +82,26 @@ namespace TechNottinghamAlexaSkill
         private async Task<SkillResponse> NextEvent(Intent intent)
         {
             var technotts = TechNottsEvent.Parse(intent);
+
+            if (string.IsNullOrWhiteSpace(technotts.Name) && intent.Slots.Count > 0)
+            {
+                Console.WriteLine("event failed: "+ intent.Slots["event"].Value);
+                return ResponseBuilder.Tell($"I'm sorry, I couldn't find information for {intent.Slots["event"].Value}. Please try again");
+            }
+
             var meetups = await GetNextEventData(technotts.EventType);
+
             meetups = meetups.Where(m =>
                 technotts.TitleFilter == null || m.name.IndexOf(technotts.TitleFilter, StringComparison.OrdinalIgnoreCase) > -1).ToArray();
             if (meetups.Length > 0)
             {
-                return ResponseBuilder.Tell(PhraseList.NextEvent(technotts,meetups.First(),Environment.CurrentTime));
-                //NodaTime.Calendars.WeekYearRules.FromCalendarWeekRule(CalendarWeekRule.FirstFourDayWeek,DayOfWeek.Monday).GetLocalDate()
+                var meetup = meetups.First();
+                var response = ResponseBuilder.Tell(ContentCreation.NextEvent(technotts,meetup,Environment.CurrentTime));
+                response.Response.Card = ContentCreation.EventCard(technotts, meetup.name, $"{DateTime.Parse(meetup.local_date).ToString("D")} at {meetup.venue.name}");
+                return response;
             }
             
-            return ResponseBuilder.Tell(PhraseList.NoNextEvent(technotts));
+            return ResponseBuilder.Tell(ContentCreation.NoNextEvent(technotts));
         }
 
         private Task<MeetupEvent[]> GetNextEventData(string type)
@@ -105,12 +115,14 @@ namespace TechNottinghamAlexaSkill
 
         private Task<SkillResponse> HelpText()
         {
-            return Task.FromResult(ResponseBuilder.Tell(PhraseList.HelpText));
+            return Task.FromResult(ResponseBuilder.Tell(ContentCreation.HelpText));
         }
 
         private Task<SkillResponse> MissionStatement()
         {
-            return Task.FromResult(ResponseBuilder.Tell(PhraseList.MissionStatement));
+            var response = ResponseBuilder.Tell(ContentCreation.MissionStatement);
+            response.Response.Card = ContentCreation.MissionStatementCard;
+            return Task.FromResult(response);
         }
     }
 }
