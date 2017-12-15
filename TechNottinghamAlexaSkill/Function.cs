@@ -97,7 +97,11 @@ namespace TechNottinghamAlexaSkill
             {
                 var meetup = meetups.First();
                 var response = ResponseBuilder.Tell(ContentCreation.NextEvent(technotts,meetup,Environment.CurrentTime));
-                response.Response.Card = ContentCreation.EventCard(technotts, meetup.name, $"{DateTime.Parse(meetup.local_date).ToString("D")} at {meetup.venue.name}");
+                if (!string.IsNullOrWhiteSpace(technotts.LargeImage))
+                {
+                    response.Response.Card = ContentCreation.EventCard(technotts, meetup.name,
+                        $"{DateTime.Parse(meetup.local_date).ToString("D")} at {meetup.venue.name}");
+                }
                 return response;
             }
             
