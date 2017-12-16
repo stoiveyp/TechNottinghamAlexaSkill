@@ -70,7 +70,7 @@ namespace TechNottinghamAlexaSkill.Tests
         {
             var s3 = GetS3();
             var function =new Function(GetEnvironment(),s3);
-            var intent = GetIntent(IntentNames.NextEvent);
+            var intent = GetIntent(IntentNames.NextSpecificEvent);
 
             await function.FunctionHandler(intent);
 
@@ -87,7 +87,7 @@ namespace TechNottinghamAlexaSkill.Tests
 
             var function = new Function(environment, s3);
 
-            var intent = GetIntent(IntentNames.NextEvent);
+            var intent = GetIntent(IntentNames.NextSpecificEvent);
 
             var expected = ResponseBuilder.Tell(ContentCreation.NoNextEvent(technott));
             var actual = await function.FunctionHandler(intent);
@@ -113,7 +113,7 @@ namespace TechNottinghamAlexaSkill.Tests
 
             var environment = GetEnvironment();
             var function = new Function(environment,s3);
-            var intent = GetIntent(IntentNames.NextEvent);
+            var intent = GetIntent(IntentNames.NextSpecificEvent);
 
             var expected = ResponseBuilder.Tell(ContentCreation.NextEvent(TechNottsEvent.Empty, events.First(),environment.CurrentTime));
             var actual = await function.FunctionHandler(intent);

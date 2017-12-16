@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using Alexa.NET.Request;
 
 namespace TechNottinghamAlexaSkill
@@ -17,23 +19,23 @@ namespace TechNottinghamAlexaSkill
         public static TechNottsEvent TechNottingham { get; } = new TechNottsEvent("Tech Nottingham", "tech-nottingham")
         {
             LargeImage = "techNottinghamLarge.png", SmallImage = "techNottingham.png",
-            Titles = new[] { "tech nottingham", "tech notts","tech nott","tek nott","tek notts" }
+            Titles = new[] { "tech nottingham" }
         };
 
         public static TechNottsEvent WomenInTech { get; } = new TechNottsEvent("Women in Technology", "women-in-tech-nottingham")
         {
             LargeImage="womenintechlarge.png",SmallImage="womenintech.png",
-            Titles = new[] { "women in technology", "women in tech", "women", "women in" }
+            Titles = new[] { "women in tech" }
         };
         public static TechNottsEvent TechOnToast { get; } = new TechNottsEvent("Tech on Toast", "tech-nottingham", "Toast")
         {
             LargeImage="techontoast.png", SmallImage="techontoast.png",
-            Titles = new[] {"tech on toast","tekrom toast", "teckrom toast", "techrom toast"}
+            Titles = new[] {"tech on toast"}
         };
         public static TechNottsEvent NottTuesday { get; } = new TechNottsEvent("Nott Tuesday", "nott-tuesday")
         {
             LargeImage = "nottTuesday.png",SmallImage = "nottTuesday.png",
-            Titles = new[] {"nott tuesday", "notts tuesday"}
+            Titles = new[] {"notts tuesday"}
         };
         public static TechNottsEvent Empty { get; } = new TechNottsEvent(string.Empty, string.Empty);
 
@@ -51,7 +53,7 @@ namespace TechNottinghamAlexaSkill
         {
             foreach (var title in Titles ?? new string[] { })
             {
-                eventList.Add(title,this);
+                eventList.Add(title.ToLower(),this);
             }
         }
 
@@ -66,12 +68,27 @@ namespace TechNottinghamAlexaSkill
 
         public static TechNottsEvent Parse(Intent intent)
         {
-            if ((intent?.Slots?.Count ?? 0) == 0 || string.IsNullOrWhiteSpace(intent.Slots["event"].Value) || !EventList.Keys.Contains(intent.Slots["event"].Value.ToLower()))
+            string slotName = "event";
+            if (intent.Slots == null || !intent.Slots.ContainsKey(slotName))
             {
                 return Empty;
             }
 
-            return EventList[intent.Slots["event"].Value.ToLower()];
+            if (string.IsNullOrWhiteSpace(intent.Slots[slotName].Value))
+            {
+                return Empty;
+            }
+
+            var name = intent.Slots[slotName].Value;
+            Console.WriteLine(name);
+            var authority = intent.Slots[slotName]?.Resolution?.Authorities?.FirstOrDefault()?.Values.FirstOrDefault();
+            if (authority != null)
+            {
+                name = authority.Value.Name;
+            }
+
+            name = name.ToLower();
+            return EventList.ContainsKey(name) ? EventList[name] : Empty;
         }
     }
 }

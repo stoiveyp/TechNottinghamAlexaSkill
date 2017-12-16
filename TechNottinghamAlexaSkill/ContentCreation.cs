@@ -38,7 +38,7 @@ namespace TechNottinghamAlexaSkill
         }
 
 
-        public static Speech NextEvent(TechNottsEvent technotts, MeetupEvent meetup, DateTime currentDateTime)
+        public static Speech NextEvent(TechNottsEvent technotts, MeetupEvent meetup, DateTime currentDateTime,bool hackTitle = true)
         {
             var speech = new Speech();
 
@@ -56,7 +56,7 @@ namespace TechNottinghamAlexaSkill
             eventSummary.Elements.Add(new Sentence($"It's at {meetup.venue.name}."));
 
             //var title = new Prosody{Rate=ProsodyRate.Slow};
-            var meetupName = System.Net.WebUtility.HtmlDecode(meetup.name.Contains(":")? meetup.name.Substring(meetup.name.IndexOf(':')): meetup.name);
+            var meetupName = System.Net.WebUtility.HtmlDecode(meetup.name.Contains(":") && hackTitle? meetup.name.Substring(meetup.name.IndexOf(':')): meetup.name);
             eventSummary.Elements.Add(new Sentence($"and is called {meetupName}"));
             //eventSummary.Elements.Add(title);
             speech.Elements.Add(eventSummary);

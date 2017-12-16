@@ -9,6 +9,7 @@ using Amazon.Lambda.Core;
 using Amazon.S3;
 using Newtonsoft.Json.Linq;
 using TechNottingham.Common;
+using TechNottinghamAlexaSkill.Intents;
 
 // Assembly attribute to enable the Lambda function's JSON input to be converted into a .NET class.
 [assembly: LambdaSerializer(typeof(Amazon.Lambda.Serialization.Json.JsonSerializer))]
@@ -61,17 +62,21 @@ namespace TechNottinghamAlexaSkill
 
         private static Task<SkillResponse> Launch()
         {
+            Console.WriteLine("Launch");
             return Task.FromResult(ResponseBuilder.Ask(ContentCreation.WelcomeText, null));
         }
 
         private Task<SkillResponse> Intent(SkillRequest request, IntentRequest intent)
         {
+            Console.WriteLine(intent.Intent.Name);
             switch (intent.Intent.Name)
             {
                 case IntentNames.MissionStatement:
-                    return MissionStatement();
+                    return MissionStatementProcessor.Process();
                 case IntentNames.NextEvent:
-                    return NextEvent(intent.Intent);
+                    return new NextEventProcessor(Environment, S3Client).Process();
+                case IntentNames.NextSpecificEvent:
+                    return new NextEventProcessor(Environment,S3Client).ProcessSpecific(intent.Intent);
                 case BuiltInIntent.Help:
                     return HelpText();
             }
@@ -79,54 +84,9 @@ namespace TechNottinghamAlexaSkill
             return Task.FromResult(ResponseBuilder.Empty());
         }
 
-        private async Task<SkillResponse> NextEvent(Intent intent)
-        {
-            var technotts = TechNottsEvent.Parse(intent);
-
-            if (string.IsNullOrWhiteSpace(technotts.Name) && intent.Slots.Count > 0)
-            {
-                Console.WriteLine("event failed: "+ intent.Slots["event"].Value);
-                return ResponseBuilder.Tell($"I'm sorry, I couldn't find information for {intent.Slots["event"].Value}. Please try again");
-            }
-
-            var meetups = await GetNextEventData(technotts.EventType);
-
-            meetups = meetups.Where(m =>
-                technotts.TitleFilter == null || m.name.IndexOf(technotts.TitleFilter, StringComparison.OrdinalIgnoreCase) > -1).ToArray();
-            if (meetups.Length > 0)
-            {
-                var meetup = meetups.First();
-                var response = ResponseBuilder.Tell(ContentCreation.NextEvent(technotts,meetup,Environment.CurrentTime));
-                if (!string.IsNullOrWhiteSpace(technotts.LargeImage))
-                {
-                    response.Response.Card = ContentCreation.EventCard(technotts, meetup.name,
-                        $"{DateTime.Parse(meetup.local_date).ToString("D")} at {meetup.venue.name}");
-                }
-                return response;
-            }
-            
-            return ResponseBuilder.Tell(ContentCreation.NoNextEvent(technotts));
-        }
-
-        private Task<MeetupEvent[]> GetNextEventData(string type)
-        {
-            if (string.IsNullOrWhiteSpace(type))
-            {
-                return S3Client.GetEventData(S3Keys.EventData);
-            }
-            return S3Client.GetEventData(S3Keys.EventData + "_" + type);
-        }
-
         private Task<SkillResponse> HelpText()
         {
             return Task.FromResult(ResponseBuilder.Tell(ContentCreation.HelpText));
-        }
-
-        private Task<SkillResponse> MissionStatement()
-        {
-            var response = ResponseBuilder.Tell(ContentCreation.MissionStatement);
-            response.Response.Card = ContentCreation.MissionStatementCard;
-            return Task.FromResult(response);
         }
     }
 }
