@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
+using System.Linq;
+using Alexa.NET.Request;
 using Alexa.NET.Response;
 using Alexa.NET.Response.Ssml;
 using Humanizer;
@@ -17,6 +17,31 @@ namespace TechNottinghamAlexaSkill
         public const string MissionStatement = "Tech Nottingham is an organisation with the mission to Make Nottingham a better place to live and work in technology. All our events are free to attend, and we welcome everyone regardless of background or technical experience.";
         public const string ImageUrl = "https://s3-eu-west-1.amazonaws.com/technottinghamalexaimages/";
         public static ICard MissionStatementCard => EventCard(TechNottsEvent.TechNottingham, "Tech Nottingham", MissionStatement);
+
+        public static TechNottsEvent ParseTechNottsEvent(this Intent intent)
+        {
+            string slotName = "event";
+            if (intent.Slots == null || !intent.Slots.ContainsKey(slotName))
+            {
+                return TechNottsEvent.Empty;
+            }
+
+            if (string.IsNullOrWhiteSpace(intent.Slots[slotName].Value))
+            {
+                return TechNottsEvent.Empty;
+            }
+
+            var name = intent.Slots[slotName].Value;
+            Console.WriteLine(name);
+            var authority = intent.Slots[slotName]?.Resolution?.Authorities?.FirstOrDefault()?.Values.FirstOrDefault();
+            if (authority != null)
+            {
+                name = authority.Value.Name;
+            }
+
+            name = name.ToLower();
+            return TechNottsEvent.EventList.ContainsKey(name) ? TechNottsEvent.EventList[name] : TechNottsEvent.Empty;
+        }
 
         public static ICard EventCard(TechNottsEvent meetup, string title, string content)
         {

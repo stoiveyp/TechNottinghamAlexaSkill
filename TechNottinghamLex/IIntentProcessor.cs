@@ -3,6 +3,7 @@ using Amazon.Lambda.LexEvents;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace TechNottinghamLex
 {
@@ -17,6 +18,6 @@ namespace TechNottinghamLex
         /// <param name="lexEvent"></param>
         /// <param name="context"></param>
         /// <returns></returns>
-        LexResponse Process(LexEvent lexEvent, ILambdaContext context);
+        Task<LexResponse> ProcessAsync(LexEvent lexEvent, ILambdaContext context);
     }
 }

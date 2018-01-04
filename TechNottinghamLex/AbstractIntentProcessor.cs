@@ -3,7 +3,7 @@ using Amazon.Lambda.LexEvents;
 using System;
 using System.Collections.Generic;
 using System.Text;
-
+using System.Threading.Tasks;
 using Newtonsoft.Json;
 
 namespace TechNottinghamLex
@@ -25,7 +25,7 @@ namespace TechNottinghamLex
         /// <param name="lexEvent"></param>
         /// <param name="context"></param>
         /// <returns></returns>
-        public abstract LexResponse Process(LexEvent lexEvent, ILambdaContext context);
+        public abstract Task<LexResponse> ProcessAsync(LexEvent lexEvent, ILambdaContext context);
 
         protected string SerializeReservation(Reservation reservation)
         {

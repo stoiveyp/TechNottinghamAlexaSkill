@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Alexa.NET;
 using Alexa.NET.Response;
+using TechNottingham.Common;
 
-namespace TechNottinghamAlexaSkill.Intents
+namespace TechNottinghamAlexaSkill.Processors
 {
     class MissionStatementProcessor
     {

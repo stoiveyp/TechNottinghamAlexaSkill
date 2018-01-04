@@ -1,14 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Alexa.NET;
 using Alexa.NET.Request;
 using Alexa.NET.Response;
 using TechNottingham.Common;
 
-namespace TechNottinghamAlexaSkill.Intents
+namespace TechNottinghamAlexaSkill.Processors
 {
     public class NextEventProcessor
     {
@@ -42,7 +40,7 @@ namespace TechNottinghamAlexaSkill.Intents
 
         public async Task<SkillResponse> ProcessSpecific(Intent intent)
         {
-            var technotts = TechNottsEvent.Parse(intent);
+            var technotts = intent.ParseTechNottsEvent();
 
             if (string.IsNullOrWhiteSpace(technotts.Name) && intent.Slots.Count > 0)
             {
@@ -69,13 +67,17 @@ namespace TechNottinghamAlexaSkill.Intents
             return ResponseBuilder.Tell(ContentCreation.NoNextEvent(technotts));
         }
 
-        private Task<MeetupEvent[]> GetNextEventData(string type)
+        private async Task<MeetupEvent[]> GetNextEventData(string type)
         {
+            Task<MeetupEvent[]> evenTask;
             if (string.IsNullOrWhiteSpace(type))
             {
-                return Client.GetEventData(S3Keys.EventData);
+                evenTask = Client.GetEventData(S3Keys.EventData);
             }
-            return Client.GetEventData(S3Keys.EventData + "_" + type);
+            evenTask = Client.GetEventData(S3Keys.EventData + "_" + type);
+
+            var results = await evenTask;
+            return results.Where(me => DateTime.Parse(me.local_date) > Environment.CurrentTime).ToArray();
         }
     }
 }

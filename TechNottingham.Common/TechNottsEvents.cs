@@ -2,9 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using Alexa.NET.Request;
 
-namespace TechNottinghamAlexaSkill
+namespace TechNottingham.Common
 {
     public class TechNottsEvent
     {
@@ -64,31 +63,6 @@ namespace TechNottinghamAlexaSkill
             Name = name;
             EventType = type;
             TitleFilter = titleFilter;
-        }
-
-        public static TechNottsEvent Parse(Intent intent)
-        {
-            string slotName = "event";
-            if (intent.Slots == null || !intent.Slots.ContainsKey(slotName))
-            {
-                return Empty;
-            }
-
-            if (string.IsNullOrWhiteSpace(intent.Slots[slotName].Value))
-            {
-                return Empty;
-            }
-
-            var name = intent.Slots[slotName].Value;
-            Console.WriteLine(name);
-            var authority = intent.Slots[slotName]?.Resolution?.Authorities?.FirstOrDefault()?.Values.FirstOrDefault();
-            if (authority != null)
-            {
-                name = authority.Value.Name;
-            }
-
-            name = name.ToLower();
-            return EventList.ContainsKey(name) ? EventList[name] : Empty;
         }
     }
 }
