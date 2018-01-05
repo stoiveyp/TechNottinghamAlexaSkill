@@ -45,7 +45,7 @@ namespace TechNottinghamAlexaSkill.Processors
             if (string.IsNullOrWhiteSpace(technotts.Name) && intent.Slots.Count > 0)
             {
                 Console.WriteLine("event failed: " + intent.Slots["event"].Value);
-                return ResponseBuilder.Tell($"I'm sorry, I couldn't find information for {(string.IsNullOrWhiteSpace(intent.Slots["event"].Value) ? "that event" : intent.Slots["event"].Value)}. Please try again");
+                return ResponseBuilder.Tell($"I'm sorry, I couldn't find information for {(string.IsNullOrWhiteSpace(intent.Slots["event"].Value) ? "that event" : intent.Slots["event"].Value)}.");
             }
 
             var meetups = await GetNextEventData(technotts.EventType);
