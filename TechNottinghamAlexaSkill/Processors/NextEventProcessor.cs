@@ -74,7 +74,10 @@ namespace TechNottinghamAlexaSkill.Processors
             {
                 evenTask = Client.GetEventData(S3Keys.EventData);
             }
-            evenTask = Client.GetEventData(S3Keys.EventData + "_" + type);
+            else
+            {
+                evenTask = Client.GetEventData(S3Keys.EventData + "_" + type);
+            }
 
             var results = await evenTask;
             return results.Where(me => DateTime.Parse(me.local_date) > Environment.CurrentTime).ToArray();

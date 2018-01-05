@@ -86,7 +86,7 @@ namespace TechNottinghamAlexaSkill
 
         private Task<SkillResponse> HelpText()
         {
-            return Task.FromResult(ResponseBuilder.Tell(ContentCreation.HelpText));
+            return Task.FromResult(ResponseBuilder.Ask(ContentCreation.HelpText,null));
         }
     }
 }
