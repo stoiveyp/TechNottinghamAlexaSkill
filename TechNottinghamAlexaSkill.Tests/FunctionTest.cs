@@ -47,7 +47,7 @@ namespace TechNottinghamAlexaSkill.Tests
             var function = DefaultFunction();
             var intent = new SkillRequest {Request = new LaunchRequest()};
 
-            var expected = ResponseBuilder.Ask(ContentCreation.WelcomeText, null);
+            var expected = ResponseBuilder.Ask(CoreData.WelcomeText, null);
             var actual = await function.FunctionHandler(intent);
 
             Assert.True(CompareJson(expected, actual));
@@ -127,7 +127,7 @@ namespace TechNottinghamAlexaSkill.Tests
             var function = DefaultFunction();
             var intent = GetIntent(BuiltInIntent.Help);
 
-            var expected = ResponseBuilder.Tell(ContentCreation.HelpText);
+            var expected = ResponseBuilder.Tell(CoreData.HelpText);
             var actual = await function.FunctionHandler(intent);
 
             Assert.True(CompareJson(expected, actual));

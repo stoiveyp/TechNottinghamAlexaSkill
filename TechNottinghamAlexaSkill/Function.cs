@@ -9,7 +9,7 @@ using Amazon.Lambda.Core;
 using Amazon.S3;
 using Newtonsoft.Json.Linq;
 using TechNottingham.Common;
-using TechNottinghamAlexaSkill.Intents;
+using TechNottinghamAlexaSkill.Processors;
 
 // Assembly attribute to enable the Lambda function's JSON input to be converted into a .NET class.
 [assembly: LambdaSerializer(typeof(Amazon.Lambda.Serialization.Json.JsonSerializer))]
@@ -86,7 +86,7 @@ namespace TechNottinghamAlexaSkill
 
         private Task<SkillResponse> HelpText()
         {
-            return Task.FromResult(ResponseBuilder.Tell(ContentCreation.HelpText));
+            return Task.FromResult(ResponseBuilder.Ask(ContentCreation.HelpText,null));
         }
     }
 }
