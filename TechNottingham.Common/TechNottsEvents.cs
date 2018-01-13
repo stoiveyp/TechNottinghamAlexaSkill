@@ -34,7 +34,7 @@ namespace TechNottingham.Common
         public static TechNottsEvent NottTuesday { get; } = new TechNottsEvent("Nott Tuesday", "nott-tuesday")
         {
             LargeImage = "nottTuesday.png",SmallImage = "nottTuesday.png",
-            Titles = new[] {"notts tuesday"}
+            Titles = new[] {"nott tuesday","notts tuesday"}
         };
         public static TechNottsEvent Empty { get; } = new TechNottsEvent(string.Empty, string.Empty);
 

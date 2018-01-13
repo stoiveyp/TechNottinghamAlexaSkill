@@ -64,6 +64,9 @@ namespace TechNottinghamGoogleAction
     {
         [JsonProperty("is_ssml")]
         public bool IsSsml { get; set; }
+
+        [JsonProperty("expect_user_response")]
+        public bool ExpectResponse { get; set; }
     }
 
     //    {

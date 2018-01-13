@@ -34,7 +34,7 @@ namespace TechNottinghamGoogleAction
             Console.WriteLine(name);
 
             name = name.ToLower();
-            return TechNottsEvent.EventList.ContainsKey(name) ? TechNottsEvent.EventList[name] : TechNottsEvent.Empty;
+            return TechNottsEvent.EventList.ContainsKey(name.ToLower()) ? TechNottsEvent.EventList[name.ToLower()] : TechNottsEvent.Empty;
         }
 
         public static string NoNextEvent(TechNottsEvent technotts)
