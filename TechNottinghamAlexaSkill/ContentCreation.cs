@@ -2,6 +2,9 @@
 using System.Linq;
 using Alexa.NET.Request;
 using Alexa.NET.Response;
+using Alexa.NET.Response.Directive;
+using Alexa.NET.Response.Directive.Templates;
+using Alexa.NET.Response.Directive.Templates.Types;
 using Alexa.NET.Response.Ssml;
 using Humanizer;
 using Humanizer.Localisation;
@@ -94,5 +97,30 @@ namespace TechNottinghamAlexaSkill
             return speech;
         }
 
+        public static ITemplate CreateMeetupListTemplate(MeetupEvent[] meetupList)
+        {
+            var template = new ListTemplate1();
+            template.Title = "Upcoming Tech Nottingham Events";
+            template.BackButton = BackButtonVisibility.Hidden;
+
+            foreach (var item in meetupList.Select(ConvertToListItem))
+            {
+                template.Items.Add(item);
+            }
+
+            return template;
+        }
+
+        private static ListItem ConvertToListItem(MeetupEvent meetup)
+        {
+            return new ListItem
+            {
+                Content = new TemplateContent
+                {
+                    Primary = new TemplateText { Text = meetup.name },
+                    Secondary = new TemplateText { Text = DateTime.Parse(meetup.local_date).ToString("D") }
+                }
+            };
+        }
     }
 }

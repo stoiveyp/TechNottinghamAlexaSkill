@@ -74,7 +74,7 @@ namespace TechNottinghamAlexaSkill
                 case IntentNames.MissionStatement:
                     return MissionStatementProcessor.Process();
                 case IntentNames.NextEvent:
-                    return new NextEventProcessor(Environment, S3Client).Process();
+                    return new NextEventProcessor(Environment, S3Client).Process(request.Context.System.Device.IsInterfaceSupported(SupportedInterfaces.Display));
                 case IntentNames.NextSpecificEvent:
                     return new NextEventProcessor(Environment,S3Client).ProcessSpecific(intent.Intent);
                 case BuiltInIntent.Help:

@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Alexa.NET;
 using Alexa.NET.Request;
 using Alexa.NET.Response;
+using Alexa.NET.Response.Directive;
 using TechNottingham.Common;
 
 namespace TechNottinghamAlexaSkill.Processors
@@ -19,23 +20,33 @@ namespace TechNottinghamAlexaSkill.Processors
             Client = client;
         }
 
-        public async Task<SkillResponse> Process()
+        public async Task<SkillResponse> Process(bool supportsDisplay)
         {
             var technotts = TechNottsEvent.TechNottingham;
-            var meetup = (await GetNextEventData(string.Empty)).FirstOrDefault();
+            var meetupList = await GetNextEventData(string.Empty);
+            var meetup = meetupList.FirstOrDefault();
 
-            if (meetup != null)
+            if (meetup == null)
             {
-                var response = ResponseBuilder.Tell(ContentCreation.NextEvent(technotts, meetup, Environment.CurrentTime,false));
-                if (!string.IsNullOrWhiteSpace(technotts.LargeImage))
-                {
-                    response.Response.Card = ContentCreation.EventCard(technotts, meetup.name,
-                        $"{DateTime.Parse(meetup.local_date):D} at {meetup.venue.name}");
-                }
-                return response;
+                return ResponseBuilder.Tell(ContentCreation.NoNextEvent(technotts));
             }
 
-            return ResponseBuilder.Tell(ContentCreation.NoNextEvent(technotts));
+            var response = ResponseBuilder.Tell(ContentCreation.NextEvent(technotts, meetup, Environment.CurrentTime,false));
+            if (!string.IsNullOrWhiteSpace(technotts.LargeImage))
+            {
+                response.Response.Card = ContentCreation.EventCard(technotts, meetup.name,
+                    $"{DateTime.Parse(meetup.local_date):D} at {meetup.venue.name}");
+            }
+
+            if (supportsDisplay)
+            {
+                var template = ContentCreation.CreateMeetupListTemplate(meetupList);
+                var directive = new DisplayRenderTemplateDirective {Template = template};
+                response.Response.Directives.Add(directive);
+            }
+
+            return response;
+
         }
 
         public async Task<SkillResponse> ProcessSpecific(Intent intent)
