@@ -14,7 +14,7 @@
     "function-memory-size" : 256,
     "function-timeout"     : 30,
     "function-handler"     : "TechNottinghamAlexaSkill::TechNottinghamAlexaSkill.Function::FunctionHandler",
-    "function-name"        : "TechNottinghamAlexaSkill2",
+    "function-name"        : "TechNottinghamAlexaSkill",
     "function-role"        : "arn:aws:iam::802502866407:role/lambda_exec_TechNottinghamCron",
     "environment-variables" : ""
 }
