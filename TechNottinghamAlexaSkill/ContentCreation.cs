@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Alexa.NET.Request;
 using Alexa.NET.Response;
@@ -97,11 +98,13 @@ namespace TechNottinghamAlexaSkill
             return speech;
         }
 
-        public static ITemplate CreateMeetupListTemplate(MeetupEvent[] meetupList)
+        public static ITemplate CreateMeetupListTemplate(IEnumerable<MeetupEvent> meetupList)
         {
-            var template = new ListTemplate1();
-            template.Title = "Upcoming Tech Nottingham Events";
-            template.BackButton = BackButtonVisibility.Hidden;
+            var template = new ListTemplate1
+            {
+                Title = "Upcoming Tech Nottingham Events",
+                BackButton = BackButtonVisibility.Hidden
+            };
 
             foreach (var item in meetupList.Select(ConvertToListItem))
             {
@@ -117,8 +120,8 @@ namespace TechNottinghamAlexaSkill
             {
                 Content = new TemplateContent
                 {
-                    Primary = new TemplateText { Text = meetup.name },
-                    Secondary = new TemplateText { Text = DateTime.Parse(meetup.local_date).ToString("D") }
+                    Primary = new TemplateText { Text = meetup.name,Type=TextType.Plain },
+                    Secondary = new TemplateText { Text = DateTime.Parse(meetup.local_date).ToString("D"),Type=TextType.Plain }
                 }
             };
         }

@@ -40,7 +40,7 @@ namespace TechNottinghamAlexaSkill.Processors
 
             if (supportsDisplay)
             {
-                var template = ContentCreation.CreateMeetupListTemplate(meetupList);
+                var template = ContentCreation.CreateMeetupListTemplate(meetupList.Take(4));
                 var directive = new DisplayRenderTemplateDirective {Template = template};
                 response.Response.Directives.Add(directive);
             }
