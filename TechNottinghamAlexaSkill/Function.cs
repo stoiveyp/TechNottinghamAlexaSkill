@@ -40,7 +40,7 @@ namespace TechNottinghamAlexaSkill
             {
                 return InnerHandler(input);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 //Console.WriteLine(ex.Message);
                 return Task.FromResult(ResponseBuilder.Tell(ContentCreation.ErrorText));
