@@ -1,0 +1,1 @@
+dotnet publish -c Release -o out -f netcoreapp2.0 /p:GenerateRuntimeConfigurationFiles=true
